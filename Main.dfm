@@ -1,0 +1,21 @@
+object frmMain: TfrmMain
+  Left = 320
+  Top = 120
+  Caption = 'frmMain'
+  ClientHeight = 95
+  ClientWidth = 247
+  Color = clBtnFace
+  Font.Charset = SHIFTJIS_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = #12513#12452#12522#12458
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poDesigned
+  Scaled = False
+  OnClose = FormClose
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 18
+end
