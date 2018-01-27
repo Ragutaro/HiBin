@@ -73,7 +73,8 @@ begin
   begin
     Result := True;
     iWnd := FindWindowExW(iBon, 0, 'Edit', nil);
-    repeat
+    while iWnd <> 0 do
+    begin
       iLen := SendMessageW(iWnd, WM_GETTEXTLENGTH, 0, 0);
       SetLength(sText, iLen);
       SendMessageW(iWnd, WM_GETTEXT, iLen, lParam(PWideChar(sText)));
@@ -91,7 +92,7 @@ begin
         end;
       end;
       iWnd := FindWindowExW(iBon, iWnd, 'Edit', nil);
-    until iWnd = 0;
+    end;
     iBon := FindWindowExW(iDesk, iBon, nil, 'EpgDataCap_Bon');
   end;
 end;

@@ -1,11 +1,11 @@
 object frmMain: TfrmMain
   Left = 320
   Top = 120
-  BorderIcons = [biSystemMenu]
+  BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'HiBin'
   ClientHeight = 92
-  ClientWidth = 513
+  ClientWidth = 598
   Color = clBtnFace
   Font.Charset = SHIFTJIS_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,12 @@ object frmMain: TfrmMain
   OnClose = FormClose
   OnShow = FormShow
   DesignSize = (
-    513
+    598
     92)
   PixelsPerInch = 96
   TextHeight = 18
   object Button1: TButton
-    Left = 219
+    Left = 261
     Top = 61
     Width = 75
     Height = 25
@@ -33,12 +33,12 @@ object frmMain: TfrmMain
     Default = True
     TabOrder = 0
     OnClick = Button1Click
-    ExplicitTop = 115
+    ExplicitLeft = 219
   end
   object lvwList: TListView
     Left = 0
     Top = 0
-    Width = 513
+    Width = 598
     Height = 55
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
@@ -58,7 +58,7 @@ object frmMain: TfrmMain
     SmallImages = PngImageList
     TabOrder = 1
     ViewStyle = vsReport
-    ExplicitHeight = 109
+    ExplicitWidth = 513
   end
   object PngImageList: TPngImageList
     ColorDepth = cd32Bit
