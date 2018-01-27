@@ -19,7 +19,7 @@ type
     procedure Button1Click(Sender: TObject);
   private
     { Private 宣言 }
-    procedure _GetText;
+    function _IsRecording: Boolean;
   public
     { Public 宣言 }
   end;
@@ -49,41 +49,43 @@ end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
-//  Exit;
-  if FindWindowW(nil, 'EpgDataCap_Bon') <> 0 then
-    _GetText
-  else
+  if Not _IsRecording then
   begin
   	SetSuspendState(True, False, False);
     Close;
   end;
 end;
 
-procedure TfrmMain._GetText;
+function TfrmMain._IsRecording: Boolean;
 var
   sl : TStringList;
   iBon, iWnd : THandle;
   sText : String;
   iLen : Integer;
 begin
+  Result := False;
   iBon := FindWindowW(nil, 'EpgDataCap_Bon');
-  iWnd := FindWindowExW(iBon, 0, 'Edit', nil);
-  repeat
-    iLen := SendMessageW(iWnd, WM_GETTEXTLENGTH, 0, 0);
-    SetLength(sText, iLen);
-    SendMessageW(iWnd, WM_GETTEXT, iLen, lParam(PWideChar(sText)));
-    if Pos('/', sText) > 0 then
-    begin
-      sl := TStringList.Create;
-      try
-        sl.Text := sText;
-        staInfo.Caption := sl[0] + #13#10 + sl[1];
-      finally
-        sl.Free;
+  if iBon <> 0 then
+  begin
+    Result := True;
+    iWnd := FindWindowExW(iBon, 0, 'Edit', nil);
+    repeat
+      iLen := SendMessageW(iWnd, WM_GETTEXTLENGTH, 0, 0);
+      SetLength(sText, iLen);
+      SendMessageW(iWnd, WM_GETTEXT, iLen, lParam(PWideChar(sText)));
+      if Pos('/', sText) > 0 then
+      begin
+        sl := TStringList.Create;
+        try
+          sl.Text := sText;
+          staInfo.Caption := sl[0] + #13#10 + sl[1];
+        finally
+          sl.Free;
+        end;
       end;
-    end;
-    iWnd := FindWindowExW(iBon, iWnd, 'Edit', nil);
-  until iWnd = 0;
+      iWnd := FindWindowExW(iBon, iWnd, 'Edit', nil);
+    until iWnd = 0;
+  end;
 end;
 
 end.

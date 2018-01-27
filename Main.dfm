@@ -21,12 +21,12 @@ object frmMain: TfrmMain
   PixelsPerInch = 96
   TextHeight = 18
   object Label1: TLabel
-    Left = 130
+    Left = 123
     Top = 8
-    Width = 51
+    Width = 60
     Height = 23
     Alignment = taCenter
-    Caption = #37682#30011#20013'!'
+    Caption = #9679#37682#30011#20013
     Font.Charset = SHIFTJIS_CHARSET
     Font.Color = clRed
     Font.Height = -15
@@ -35,7 +35,7 @@ object frmMain: TfrmMain
     ParentFont = False
   end
   object Button1: TButton
-    Left = 114
+    Left = 115
     Top = 115
     Width = 75
     Height = 25
