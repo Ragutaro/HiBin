@@ -11,10 +11,15 @@ uses
 
 type
   TfrmMain = class(TForm)
+    Button1: TButton;
+    Label1: TLabel;
+    staInfo: TStaticText;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private 宣言 }
+    procedure _GetText;
   public
     { Public 宣言 }
   end;
@@ -28,19 +33,57 @@ implementation
 
 {$R *.dfm}
 
+uses
+  dp;
+
+procedure TfrmMain.Button1Click(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Release;
   frmMain := nil;   //フォーム名に変更する
 end;
 
-procedure TfrmMain.FormCreate(Sender: TObject);
+procedure TfrmMain.FormShow(Sender: TObject);
 begin
+//  Exit;
   if FindWindowW(nil, 'EpgDataCap_Bon') <> 0 then
-    ShowMessage('録画中です')
+    _GetText
   else
+  begin
   	SetSuspendState(True, False, False);
-  Close;
+    Close;
+  end;
+end;
+
+procedure TfrmMain._GetText;
+var
+  sl : TStringList;
+  iBon, iWnd : THandle;
+  sText : String;
+  iLen : Integer;
+begin
+  iBon := FindWindowW(nil, 'EpgDataCap_Bon');
+  iWnd := FindWindowExW(iBon, 0, 'Edit', nil);
+  repeat
+    iLen := SendMessageW(iWnd, WM_GETTEXTLENGTH, 0, 0);
+    SetLength(sText, iLen);
+    SendMessageW(iWnd, WM_GETTEXT, iLen, lParam(PWideChar(sText)));
+    if Pos('/', sText) > 0 then
+    begin
+      sl := TStringList.Create;
+      try
+        sl.Text := sText;
+        staInfo.Caption := sl[0] + #13#10 + sl[1];
+      finally
+        sl.Free;
+      end;
+    end;
+    iWnd := FindWindowExW(iBon, iWnd, 'Edit', nil);
+  until iWnd = 0;
 end;
 
 end.
