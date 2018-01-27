@@ -7,13 +7,14 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.StrUtils, IniFilesDX, System.IOUtils, System.Types,
-  Vcl.Filectrl, Vcl.StdCtrls;
+  Vcl.Filectrl, Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList,
+  PngImageList;
 
 type
   TfrmMain = class(TForm)
     Button1: TButton;
-    Label1: TLabel;
-    staInfo: TStaticText;
+    lvwList: TListView;
+    PngImageList: TPngImageList;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -24,16 +25,17 @@ type
     { Public 宣言 }
   end;
 
+  function SetSuspendState(bHibernate, bForceCritical, bDisableWakeEvent: Boolean): Boolean; stdcall; external 'powrprof.dll' name 'SetSuspendState';
+
 var
   frmMain: TfrmMain;
-
-  function SetSuspendState(hibernate, forcecritical, disablewakeevent: boolean): boolean; stdcall; external 'powrprof.dll' name 'SetSuspendState';
 
 implementation
 
 {$R *.dfm}
 
 uses
+  HideUtils,
   dp;
 
 procedure TfrmMain.Button1Click(Sender: TObject);
@@ -49,7 +51,7 @@ end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
-  if Not _IsRecording then
+  if (Not _IsRecording) and (Not IsDebugMode) then
   begin
   	SetSuspendState(True, False, False);
     Close;
@@ -58,14 +60,16 @@ end;
 
 function TfrmMain._IsRecording: Boolean;
 var
+  item : TListItem;
   sl : TStringList;
-  iBon, iWnd : THandle;
+  iDesk, iBon, iWnd : THandle;
   sText : String;
   iLen : Integer;
 begin
   Result := False;
-  iBon := FindWindowW(nil, 'EpgDataCap_Bon');
-  if iBon <> 0 then
+  iDesk := GetDesktopWindow;
+  iBon := FindWindowExW(iDesk, 0, nil, 'EpgDataCap_Bon');
+  while iBon <> 0 do
   begin
     Result := True;
     iWnd := FindWindowExW(iBon, 0, 'Edit', nil);
@@ -78,13 +82,17 @@ begin
         sl := TStringList.Create;
         try
           sl.Text := sText;
-          staInfo.Caption := sl[0] + #13#10 + sl[1];
+          item := lvwList.Items.Add;
+          item.Caption := sl[0];
+          item.SubItems.Add(sl[1]);
+          item.ImageIndex := 0;
         finally
           sl.Free;
         end;
       end;
       iWnd := FindWindowExW(iBon, iWnd, 'Edit', nil);
     until iWnd = 0;
+    iBon := FindWindowExW(iDesk, iBon, nil, 'EpgDataCap_Bon');
   end;
 end;
 
