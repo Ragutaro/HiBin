@@ -22,6 +22,7 @@ type
   private
     { Private 宣言 }
     function _IsRecording: Boolean;
+    function _IsConverting: Boolean;
   public
     { Public 宣言 }
   end;
@@ -60,11 +61,19 @@ end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
-  if (Not _IsRecording) and (Not IsDebugMode) then
+  if (Not _IsRecording) and (Not _IsConverting) and (Not IsDebugMode) then
   begin
   	SetSuspendState(True, False, False);
     Close;
   end;
+end;
+
+function TfrmMain._IsConverting: Boolean;
+begin
+  if FindWindowW('ConsoleWindowClass', nil) <> 0 then
+    Result := True
+  else
+    Result := False;
 end;
 
 function TfrmMain._IsRecording: Boolean;
