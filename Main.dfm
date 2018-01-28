@@ -17,6 +17,7 @@ object frmMain: TfrmMain
   Position = poDesktopCenter
   Scaled = False
   OnClose = FormClose
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   DesignSize = (
     598
@@ -33,7 +34,6 @@ object frmMain: TfrmMain
     Default = True
     TabOrder = 0
     OnClick = Button1Click
-    ExplicitLeft = 219
   end
   object lvwList: TListView
     Left = 0
@@ -58,7 +58,6 @@ object frmMain: TfrmMain
     SmallImages = PngImageList
     TabOrder = 1
     ViewStyle = vsReport
-    ExplicitWidth = 513
   end
   object PngImageList: TPngImageList
     ColorDepth = cd32Bit

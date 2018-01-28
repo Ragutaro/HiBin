@@ -18,6 +18,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private 宣言 }
     function _IsRecording: Boolean;
@@ -49,6 +50,14 @@ begin
   frmMain := nil;   //フォーム名に変更する
 end;
 
+procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case Key of
+    VK_ESCAPE : Close;
+  end;
+end;
+
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   if (Not _IsRecording) and (Not IsDebugMode) then
@@ -64,7 +73,6 @@ var
   sl : TStringList;
   iDesk, iBon, iWnd : THandle;
   sText : String;
-  iLen : Integer;
 begin
   Result := False;
   iDesk := GetDesktopWindow;
@@ -75,9 +83,7 @@ begin
     iWnd := FindWindowExW(iBon, 0, 'Edit', nil);
     while iWnd <> 0 do
     begin
-      iLen := SendMessageW(iWnd, WM_GETTEXTLENGTH, 0, 0);
-      SetLength(sText, iLen);
-      SendMessageW(iWnd, WM_GETTEXT, iLen, lParam(PWideChar(sText)));
+      sText := GetWindowText(iWnd);
       if Pos('/', sText) > 0 then
       begin
         sl := TStringList.Create;
